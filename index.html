@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pour ma femme</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Arial', sans-serif;
+      background: linear-gradient(120deg, #1b003b, #001f3f);
+      color: #fff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      overflow: hidden;
+    }
+    #app {
+      text-align: center;
+      max-width: 500px;
+      padding: 30px;
+      background-color: rgba(0,0,50,0.7);
+      border-radius: 20px;
+      box-shadow: 0 0 20px #7f00ff;
+    }
+    input, textarea, button {
+      margin-top: 20px;
+      padding: 10px;
+      border-radius: 10px;
+      border: none;
+      font-size: 1em;
+    }
+    button {
+      cursor: pointer;
+      background-color: #7f00ff;
+      color: white;
+      transition: 0.3s;
+    }
+    button:hover {
+      background-color: #b300ff;
+    }
+    .star {
+      font-size: 2em;
+      cursor: pointer;
+      color: #555;
+    }
+    .star.selected {
+      color: #ffcc00;
+    }
+    .heart {
+      position: absolute;
+      width: 20px;
+      height: 20px;
+      background-color: transparent;
+      animation: floatUp 5s linear infinite;
+      pointer-events: none;
+    }
+    .heart::before {
+      content: "❤";
+      color: rgba(255, 192, 203, 0.4);
+      font-size: 20px;
+    }
+    @keyframes floatUp {
+      0% { transform: translateY(100vh); opacity: 0; }
+      50% { opacity: 1; }
+      100% { transform: translateY(-10vh); opacity: 0; }
+    }
+  </style>
+</head>
+<body>
+  <div id="app">
+    <h2>Ton prénom :</h2>
+    <input type="text" id="nameInput" placeholder="Ecris le ici caca..." />
+    <br />
+    <button onclick="validerNom()">Valider</button>
+  </div>
+
+  <script>
+    const app = document.getElementById("app");
+
+    function validerNom() {
+      const nom = document.getElementById("nameInput").value.trim();
+      if (nom.toLowerCase() === "carla") {
+        demanderNote();
+      } else {
+        app.innerHTML = `<h2>Déso, ce site est réservé pour ma femme, bye.</h2>`;
+      }
+    }
+
+    function demanderNote() {
+      app.innerHTML = `<h2>Coucou ma femme, comment était ta journée ?</h2><div id="stars"></div><p id="message"></p><button id="nextBtn" style="display:none;" onclick="demanderAmour()">Suivant</button>`;
+      const messages = [
+        "QUOIII ?? Ok j'arrive a Paris",
+        "OMMGG appelle moi",
+        "C'est un peu moyen, appelle moi stp",
+        "Superbeee appelle moi quand meme",
+        "LETS GOOOO BELLE PERF"
+      ];
+
+      const starsContainer = document.getElementById("stars");
+      for (let i = 1; i <= 5; i++) {
+        const star = document.createElement("span");
+        star.textContent = "⭐";
+        star.classList.add("star");
+        star.addEventListener("click", () => {
+          document.querySelectorAll(".star").forEach(s => s.classList.remove("selected"));
+          for (let j = 0; j < i; j++) {
+            document.querySelectorAll(".star")[j].classList.add("selected");
+          }
+          document.getElementById("message").textContent = messages[i - 1];
+          document.getElementById("nextBtn").style.display = "inline-block";
+        });
+        starsContainer.appendChild(star);
+      }
+    }
+
+    function demanderAmour() {
+      app.innerHTML = `
+        <h2>Tu m'aimes ?</h2>
+        <button onclick="alert('Moi aussi je t’aime puta')">Oui</button>
+        <button id="noBtn" style="position:relative">Non</button>
+      `;
+      creerPluieCoeurs();
+      const noBtn = document.getElementById("noBtn");
+      noBtn.addEventListener("mouseover", () => {
+        const x = Math.random() * 80;
+        const y = Math.random() * 80;
+        noBtn.style.position = "absolute";
+        noBtn.style.left = x + "%";
+        noBtn.style.top = y + "%";
+      });
+    }
+
+    function creerPluieCoeurs() {
+      for (let i = 0; i < 30; i++) {
+        const heart = document.createElement("div");
+        heart.className = "heart";
+        heart.style.left = Math.random() * 100 + "vw";
+        heart.style.animationDuration = (4 + Math.random() * 4) + "s";
+        heart.style.fontSize = (15 + Math.random() * 20) + "px";
+
+        const couleurs = ["#ff99cc", "#cc99ff", "#99ccff"];
+        heart.style.color = couleurs[Math.floor(Math.random() * couleurs.length)];
+        document.body.appendChild(heart);
+
+        setTimeout(() => {
+          heart.remove();
+        }, 10000);
+      }
+    }
+  </script>
+</body>
+</html>
